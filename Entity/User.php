@@ -13,68 +13,78 @@ use Doctrine\ORM\Mapping as ORM;
 class User
 {
     /**
-     * @var integer $id Google ID.
-     * @ORM\Column(name="id", type="bigint")
+     * @var string $id Google ID.
+     * @ORM\Column(name="id", type="string", length=255)
      * @ORM\Id
      */
     private $id;
 
     /**
-     * @var text $allDataSerialized
-     * @ORM\Column(name="all_data_serialized", type="text")
+     * @var string $displayName
+     * @ORM\Column(name="display_name", type="string", length=255)
      */
-    private $allDataSerialized;
+    private $displayName;
 
     /**
-     * @var string $token
-     * @ORM\Column(name="token", type="string", length=255, nullable=true)
+     * @var string $url
+     * @ORM\Column(name="url", type="string", length=255)
      */
-    private $token;
+    private $url;
 
     /**
-     * @var string $tokenSecret
-     * @ORM\Column(name="token_secret", type="string", length=255, nullable=true)
+     * @var string $imageUrl
+     * @ORM\Column(name="image_url", type="string", length=255, nullable=true)
      */
-    private $tokenSecret;
+    private $imageUrl;
 
-    public function __construct(\stdClass $data)
+    /**
+     * @var string $allDataJson
+     * @ORM\Column(name="all_data_json", type="text")
+     */
+    private $allDataJson;
+
+    /**
+     * A string with the following form:
+     * {"access_token":"TOKEN", "refresh_token":"TOKEN", "token_type":"Bearer", "expires_in":3600, "id_token":"TOKEN", "created":1320790426}
+     *
+     * @var string $tokenJson
+     * @ORM\Column(name="token_json", type="text")
+     */
+    private $tokenJson;
+
+    public function __construct(array $data)
     {
-        $this->id = $data->id;
+        $this->id = $data['id'];
         $this->updateWithNewData($data);
     }
 
-    public function updateWithNewData(\stdClass $data)
+    public function updateWithNewData(array $data)
     {
-        if ($this->id != $data->id) {
+        if ($this->id != $data['id']) {
             throw new \AW\Bundle\GooglePlusBundle\Exception('IDs don\'t match');
         }
 
-        $this->allDataSerialized = serialize($data);
+        $this->displayName = $data['displayName'];
+        $this->url = $data['url'];
+        $this->imageUrl = (isset($data['image']) ? $data['image']['url'] : null);
+        $this->allDataJson = json_encode($data);
     }
 
-    public function setToken(array $token)
+    public function setToken($token)
     {
-        $this->token = $token['oauth_token'];
-        $this->tokenSecret = $token['oauth_token_secret'];
+        if (is_string($token)) {
+            $this->tokenJson = $token;
+        }
+        elseif (is_array($token)) {
+            $this->tokenJson = json_encode($token);
+        }
+        else {
+            throw new \AW\Bundle\GooglePlusBundle\Exception('Unexpected type of token');
+        }
     }
 
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    public function getTokenSecret()
-    {
-        return $this->tokenSecret;
-    }
-
-    public function getAllDataSerialized()
-    {
-        return $this->allDataSerialized;
     }
 }

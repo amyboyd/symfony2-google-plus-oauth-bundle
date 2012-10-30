@@ -4,6 +4,7 @@ namespace AW\Bundle\GooglePlusBundle;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
+use AW\Bundle\GooglePlusBundle\Entity\User;
 
 class Service
 {
@@ -21,7 +22,7 @@ class Service
      */
     public function getUserFromSession()
     {
-        $idInSession = $this->session->get('google_plus_id');
+        $idInSession = $this->session->get('aw_google_plus_id');
         if (!$idInSession) {
             return null;
         }
@@ -29,5 +30,13 @@ class Service
         return $this->entityManager
             ->getRepository('AWGooglePlusBundle:User')
             ->find($idInSession);
+    }
+
+    /**
+     * @param \AW\Bundle\GooglePlusBundle\Entity\User $user
+     */
+    public function setUserInSession(User $user)
+    {
+        $this->session->set('aw_google_plus_id', $user->getId());
     }
 }

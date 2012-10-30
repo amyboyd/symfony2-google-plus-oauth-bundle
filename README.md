@@ -11,6 +11,9 @@
 
 * Enable AWGooglePlusBundle in your `app/AppKernel.php`
 
+* Visit https://code.google.com/apis/console?api=plus to generate your
+  client ID, client secret, and to register your redirect URI.
+
 * Copy the contents of `Resources/config/parameters.yml.sample` to your own `app/config/parameters.yml`
 
 * Review `app/console doctrine:schema:update --dump-sql`
