@@ -1,0 +1,4 @@
+services:
+    aw_google_plus:
+        class: AW\Bundle\GooglePlusBundle\Service
+        arguments: [@doctrine.orm.entity_manager, @session]

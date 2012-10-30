@@ -1,0 +1,7 @@
+aw_google_plus_auth:
+    pattern:  /awgoogleplusbundle/auth
+    defaults: { _controller: AWGooglePlusBundle:Default:auth }
+
+aw_google_plus_callback:
+    pattern:  /awgoogleplusbundle/callback
+    defaults: { _controller: AWGooglePlusBundle:Default:callback }
