@@ -87,4 +87,29 @@ class User
     {
         return $this->id;
     }
+
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+
+    public function getAllDataJson()
+    {
+        return $this->allDataJson;
+    }
+
+    public function getTokenJson()
+    {
+        return $this->tokenJson;
+    }
 }
